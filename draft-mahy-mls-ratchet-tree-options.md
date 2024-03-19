@@ -3,7 +3,8 @@ title: Ways to convey the Ratchet Tree in Messaging Layer Security
 abbrev: Ratchet tree options in MLS
 docname: draft-mahy-mls-ratchet-tree-options-latest
 ipr: trust200902
-submissiontype: IETF  # also: "independent", "IAB", or "IRTF"area: art
+submissiontype: IETF  # also: "independent", "IAB", or "IRTF"
+area: art
 workgroup: MLS
 area: sec
 category: info
@@ -37,20 +38,150 @@ informative:
 
 --- abstract
 
-TODO Abstract
-
+The Messaging Layer Security (MLS) protocol needs to share its
+`ratchet_tree` object to welcome new clients into a group and in
+external joins. While, the protocol only defines a mechanism for sharing
+the entire tree, most implementations use various optimizations to avoid
+sending this structure repeatedly in large groups. This draft explores ways
+to convey these improvements in a standardized way and to convey parts of a
+GroupInfo object that are not visible to an intermediary server.
 
 --- middle
 
 # Introduction
 
-TODO Introduction
+In the Messaging Layer Security (MLS) protocol {{!RFC9420}}, the members of
+a group are organized into a ratchet tree, the full representation of which
+is described in the `ratchet_tree` extension. The protocol specifies that
+the full `ratchet_tree` can be included in Welcome messages or shared
+externally, but describes no concrete way to convey externally.
+Likewise, when non-member clients want to join a group, they can do so using
+an external commit. They require the GroupInfo and the `ratchet_tree`.
 
+Many MLS implementations allow external commits to get the GroupInfo from a
+central server. In the MIMI architecture {{?I-D.barnes-mimi-arch}}, this server
+is called the hub, and for brevity we will use that term generically to refer
+to any central server that provides either GroupInfo or `ratchet_tree`
+objects to new members (i.e. welcomed clients or external joining clients).
+
+When handshake messages (commits and proposals) are sent as `PublicMessage`s,
+the hub can construct its own version of the `ratchet_tree` and most of the
+GroupInfo object as proposals and commits arrive.
 
 # Conventions and Definitions
 
 {::boilerplate bcp14-tagged}
 
+This document assumes familiarity with terms and structs from the MLS specification ({{!RFC9420}}).
+
+# Conveying the Ratchet Tree
+
+The ratchet tree can be conveyed inline in its entirety. Alternatively,
+this document describes how it can be referred to by reference, or
+"patched".
+
+~~~ tls
+enum {
+  reserved(0),
+  full(1),
+  byReference(2),
+  delta(3),
+  (255)
+} RatchetTreeRepresentation;
+
+struct {
+  RatchetTreeRepresentation representation;
+  select (representation) {
+    case full:
+      Node ratchet_tree<V>;
+    case byReference:
+      /* an HTTPS URL */
+      opaque ratchet_tree_url<V>;
+      opaque tree_signature<V>;
+    case delta:
+      NodeChanges node_changes;
+  };
+} RatchetTreeOption;
+~~~
+
+- `full` indicates that the complete `ratchet_tree` extension is included in
+the RatchetTreeOption object.
+- `byReference` indicates that the `ratchet_tree` is available from the `ratchet_tree_url`.
+- `delta` indicates that the new `ratchet_tree` differs from the previous
+epoch. The changes are described in the `node_changes`.
+
+~~~ tls
+struct {
+  unit32 index;
+  Node node;
+} NodePlusIndex;
+
+struct {
+  uint32 removed_nodes<V>;
+  NodePlusIndex updated_nodes<V>;
+  Node new_nodes<V>;
+} NodeChanges
+~~~
+
+To describe changes between two ratchet trees in the NodeChanges "patch"
+format, first make a list of node indexes of nodes that have been completely
+removed, next make a list of nodes that were completely replaced and their
+node indexes, finally make a list of new nodes which were added after the
+right-most node in the tree.
+
+# Conveying the GroupInfo
+
+In some systems the GroupInfo is sent to a hub with a full `ratchet_tree`
+extension always included with every commit. This is used in systems where
+the hub may or may not track the membership of the group, but does not keep the entire `ratchet_tree` data structure. As group size increases, the size
+of the `ratchet_tree` extension in the GroupInfo scales roughly linearly.
+Even using `basic` credentials, this object gets large quickly. If `x509` credentials are used, the size increases much more rapidly, and if a post-quantum ciphersuite (for example {{?I-D.mahy-mls-xwing}}) is used, the
+size will increase even more rapidly with each new member.
+
+In some systems that require unencrypted handshake messages, the hub tracks
+commits as they are sent and constructs changes to the `ratchet_tree` as
+each handshake is accepted. The hub could also recreate a GroupInfo from
+inspecting unencrypted handshake messages with the exception of the
+GroupInfo signature and the GroupInfo extensions. This document defines a
+`PartialGroupInfo` struct that contains these missing items. It can be
+included with a commit and any referenced proposals to reconstruct a
+GroupInfo and `ratchet_tree` from the GroupInfo and `ratchet_tree` included
+in the previous epoch.
+
+~~~ tls
+enum {
+  no_ratchet_tree(0),
+  present(1),
+  removed(2),
+  added(3),
+  (255)
+} RatchetTreePresence;
+
+struct {
+  RatchetTreePresence ratchet_tree_presence;
+  /* GroupInfo extensions excluding ratchet_tree */
+  Extension group_info_extensions<V>;
+  opaque Signature<V>;
+} PartialGroupInfo;
+~~~
+
+The value of the `ratchet_tree_presence` is defined as follows:
+
+- `no_ratchet_tree`: the `ratchet_tree` extension appears in neither the
+  current nor previous epochs.
+- `present`: there is a `ratchet_tree` extension in both the current and
+  previous epochs.
+- `removed`: there was a `ratchet_tree` extension in the previous epoch
+  but none in the current epoch.
+- `added`: there is a `ratchet_tree` extension in the current epoch
+  but there was none in the previous epoch.
+
+The `group_info_extensions` object is the list of GroupInfo
+extensions, omitting any `ratchet_tree` extension (if present). The only
+other GroupInfo extension defined in the base protocol is `external_pub`,
+the public key of the external commiter. The `group_info_extensions` is often an empty list.
+
+The `Signature` in the PartialGroupInfo is the signature produced by the committer (represented by leaf index in the GroupInfo as the `signer`).
 
 # Security Considerations
 
@@ -67,4 +198,5 @@ This document has no IANA actions.
 # Acknowledgments
 {:numbered="false"}
 
-TODO acknowledge.
+The PartialGroupInfo was first introduced in
+{{?I-D.robert-mimi-delivery-service}}.
