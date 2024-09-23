@@ -4,8 +4,8 @@
 
 MLS                                                              R. Mahy
 Internet-Draft                                              Unaffiliated
-Intended status: Informational                             19 March 2024
-Expires: 20 September 2024
+Intended status: Informational                         23 September 2024
+Expires: 27 March 2025
 
 
       Ways to convey the Ratchet Tree in Messaging Layer Security
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 20 September 2024.
+   This Internet-Draft will expire on 27 March 2025.
 
 Copyright Notice
 
@@ -96,10 +96,10 @@ Table of Contents
 
    Many MLS implementations allow external commits to get the GroupInfo
    from a central server.  In the MIMI architecture
-   [I-D.barnes-mimi-arch], this server is called the hub, and for
-   brevity we will use that term generically to refer to any central
-   server that provides either GroupInfo or ratchet_tree objects to new
-   members (i.e. welcomed clients or external joining clients).
+   [I-D.ietf-mimi-arch], this server is called the hub, and for brevity
+   we will use that term generically to refer to any central server that
+   provides either GroupInfo or ratchet_tree objects to new members
+   (i.e. welcomed clients or externally joining clients).
 
    When handshake messages (commits and proposals) are sent as
    PublicMessages, the hub can construct its own version of the
@@ -230,7 +230,7 @@ Table of Contents
    often an empty list.
 
    The Signature in the PartialGroupInfo is the signature produced by
-   the committer (represented by leaf index in the GroupInfo as the
+   the committer (represented by its leaf index in the GroupInfo as the
    signer).
 
 5.  Security Considerations
@@ -261,12 +261,12 @@ Table of Contents
 
 7.2.  Informative References
 
-   [I-D.barnes-mimi-arch]
+   [I-D.ietf-mimi-arch]
               Barnes, R., "An Architecture for More Instant Messaging
               Interoperability (MIMI)", Work in Progress, Internet-
-              Draft, draft-barnes-mimi-arch-03, 4 March 2024,
-              <https://datatracker.ietf.org/doc/html/draft-barnes-mimi-
-              arch-03>.
+              Draft, draft-ietf-mimi-arch-00, 2 April 2024,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-mimi-
+              arch-00>.
 
    [I-D.mahy-mls-xwing]
               Mahy, R., "Messaging Layer Security Ciphersuite using
