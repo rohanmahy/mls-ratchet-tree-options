@@ -28,7 +28,7 @@ venue:
 author:
  -  ins: R. Mahy
     name: Rohan Mahy
-    organization: Unaffiliated
+    organization: Rohan Mahy Consulting Services
     email: rohan.ietf@gmail.com
 
 normative:
@@ -164,7 +164,8 @@ struct {
   RatchetTreePresence ratchet_tree_presence;
   /* GroupInfo extensions excluding ratchet_tree */
   Extension group_info_extensions<V>;
-  opaque Signature<V>;
+  MAC confirmation_tag;
+  opaque signature<V>;
 } PartialGroupInfo;
 ~~~
 
@@ -185,7 +186,7 @@ other GroupInfo extension defined in the base protocol is `external_pub`,
 the public key of the external commiter. The `group_info_extensions` is
 often an empty list.
 
-The `Signature` in the PartialGroupInfo is the signature produced by the
+The `signature` in the PartialGroupInfo is the signature produced by the
 committer (represented by its leaf index in the GroupInfo as the `signer`).
 
 # Security Considerations
@@ -199,6 +200,12 @@ This document has no IANA actions.
 
 
 --- back
+
+# Change Log
+
+## Changes since -00
+
+- Added the confirmation tag to the partial GroupInfo.
 
 # Acknowledgments
 {:numbered="false"}
