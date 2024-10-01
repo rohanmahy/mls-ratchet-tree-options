@@ -3,9 +3,9 @@
 
 
 MLS                                                              R. Mahy
-Internet-Draft                                              Unaffiliated
-Intended status: Informational                         23 September 2024
-Expires: 27 March 2025
+Internet-Draft                            Rohan Mahy Consulting Services
+Intended status: Informational                            1 October 2024
+Expires: 4 April 2025
 
 
       Ways to convey the Ratchet Tree in Messaging Layer Security
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 27 March 2025.
+   This Internet-Draft will expire on 4 April 2025.
 
 Copyright Notice
 
@@ -80,6 +80,8 @@ Table of Contents
    7.  References
      7.1.  Normative References
      7.2.  Informative References
+   Appendix A.  Change Log
+     A.1.  Changes since -00
    Acknowledgments
    Author's Address
 
@@ -206,7 +208,8 @@ Table of Contents
      RatchetTreePresence ratchet_tree_presence;
      /* GroupInfo extensions excluding ratchet_tree */
      Extension group_info_extensions<V>;
-     opaque Signature<V>;
+     MAC confirmation_tag;
+     opaque signature<V>;
    } PartialGroupInfo;
 
    The value of the ratchet_tree_presence is defined as follows:
@@ -229,7 +232,7 @@ Table of Contents
    public key of the external commiter.  The group_info_extensions is
    often an empty list.
 
-   The Signature in the PartialGroupInfo is the signature produced by
+   The signature in the PartialGroupInfo is the signature produced by
    the committer (represented by its leaf index in the GroupInfo as the
    signer).
 
@@ -282,6 +285,12 @@ Table of Contents
               <https://datatracker.ietf.org/doc/html/draft-robert-mimi-
               delivery-service-06>.
 
+Appendix A.  Change Log
+
+A.1.  Changes since -00
+
+   *  Added the confirmation tag to the partial GroupInfo.
+
 Acknowledgments
 
    The PartialGroupInfo was first introduced in
@@ -290,5 +299,5 @@ Acknowledgments
 Author's Address
 
    Rohan Mahy
-   Unaffiliated
+   Rohan Mahy Consulting Services
    Email: rohan.ietf@gmail.com
