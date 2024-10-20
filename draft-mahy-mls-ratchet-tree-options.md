@@ -40,11 +40,12 @@ informative:
 
 The Messaging Layer Security (MLS) protocol needs to share its
 `ratchet_tree` object to welcome new clients into a group and in
-external joins. While, the protocol only defines a mechanism for sharing
+external joins. While the protocol only defines a mechanism for sharing
 the entire tree, most implementations use various optimizations to avoid
-sending this structure repeatedly in large groups. This draft explores ways
-to convey these improvements in a standardized way and to convey parts of a
-GroupInfo object that are not visible to an intermediary server.
+sending this structure repeatedly in large groups. This document describes
+a way to convey these improvements in a standardized way and to
+convey the parts of a GroupInfo object that are not visible to an
+intermediary server.
 
 --- middle
 
@@ -54,7 +55,7 @@ In the Messaging Layer Security (MLS) protocol {{!RFC9420}}, the members of
 a group are organized into a ratchet tree, the full representation of which
 is described in the `ratchet_tree` extension. The protocol specifies that
 the full `ratchet_tree` can be included in Welcome messages or shared
-externally, but describes no concrete way to convey externally.
+externally, but describes no concrete way to convey it externally.
 Likewise, when non-member clients want to join a group, they can do so using
 an external commit. They require the GroupInfo and the `ratchet_tree`.
 
@@ -64,7 +65,9 @@ is called the hub, and for brevity we will use that term generically to refer
 to any central server that provides either GroupInfo or `ratchet_tree`
 objects to new members (i.e. welcomed clients or externally joining clients).
 
-When handshake messages (commits and proposals) are sent as `PublicMessage`s,
+When all handshake messages (commits and proposals) are sent as
+`PublicMessage`s (or `SemiPrivateMessage`s
+{{?I-D.mahy-mls-semiprivatemessage}}),
 the hub can construct its own version of the `ratchet_tree` and most of the
 GroupInfo object as proposals and commits arrive.
 
@@ -77,15 +80,16 @@ This document assumes familiarity with terms and structs from the MLS specificat
 # Conveying the Ratchet Tree
 
 The ratchet tree can be conveyed inline in its entirety. Alternatively,
-this document describes how it can be referred to by reference, or
-"patched".
+this document describes how it can be referred to via an HTTPS URI, or
+signaled that it is communicated out-of-band or reconstructed by the distribution service.
 
 ~~~ tls
 enum {
   reserved(0),
   full(1),
-  byReference(2),
-  delta(3),
+  httpsUri(2),
+  outOfBand(3),
+  distributionService(4),
   (255)
 } RatchetTreeRepresentation;
 
@@ -94,40 +98,31 @@ struct {
   select (representation) {
     case full:
       Node ratchet_tree<V>;
-    case byReference:
+    case httpsUrl:
       /* an HTTPS URL */
       opaque ratchet_tree_url<V>;
       opaque tree_signature<V>;
-    case delta:
-      NodeChanges node_changes;
+    case outOfBand:
+      opaque tree_signature<V>;
+    case distributionService:
+      struct {};
   };
 } RatchetTreeOption;
 ~~~
 
 - `full` indicates that the complete `ratchet_tree` extension is included in
 the RatchetTreeOption object.
-- `byReference` indicates that the `ratchet_tree` is available from the `ratchet_tree_url`.
-- `delta` indicates that the new `ratchet_tree` differs from the previous
-epoch. The changes are described in the `node_changes`.
+- `httpsUri` indicates that the `ratchet_tree` can be downloaded from a
+URI using the `https:` scheme.
+- `outOfBand` indicates that the `ratchet_tree` is communicated or
+reconstructed via an unspecified out-of-band application protocol.
+- `distributionService` indicates that the `ratchet_tree` is reconstructed
+by the Distribution Service from the handshake in the group. This is not
+possible any handshake messages are sent as an MLS `PrivateMessage`.
 
-~~~ tls
-struct {
-  unit32 index;
-  Node node;
-} NodePlusIndex;
+**TODO**: Add GroupContext extension to configure the acceptable domain(s)
+of the `httpsUri`.
 
-struct {
-  uint32 removed_nodes<V>;
-  NodePlusIndex updated_nodes<V>;
-  Node new_nodes<V>;
-} NodeChanges
-~~~
-
-To describe changes between two ratchet trees in the NodeChanges "patch"
-format, first make a list of node indexes of nodes that have been completely
-removed, next make a list of nodes that were completely replaced and their
-node indexes, finally make a list of new nodes which were added after the
-right-most node in the tree.
 
 # Conveying the GroupInfo
 
@@ -143,13 +138,13 @@ size will increase even more rapidly with each new member.
 
 In some systems that require unencrypted handshake messages, the hub tracks
 commits as they are sent and constructs changes to the `ratchet_tree` as
-each handshake is accepted. The hub could also recreate a GroupInfo from
-inspecting unencrypted handshake messages with the exception of the
-GroupInfo signature and the GroupInfo extensions. This document defines a
-`PartialGroupInfo` struct that contains these missing items. It can be
-included with a commit and any referenced proposals to reconstruct a
-GroupInfo and `ratchet_tree` from the GroupInfo and `ratchet_tree` included
-in the previous epoch.
+each handshake is accepted. The hub could also recreate most of the fields
+of a GroupInfo, with the exception of the GroupInfo signature and the
+GroupInfo extensions, by inspecting those same unencrypted handshake
+messages . This document defines a `PartialGroupInfo` struct that contains
+these missing fields. `PartialGroupInfo` can be included with a commit and
+any referenced proposals to reconstruct a GroupInfo and `ratchet_tree` from
+the GroupInfo and `ratchet_tree` included in the previous epoch.
 
 ~~~ tls
 enum {
@@ -164,12 +159,11 @@ struct {
   RatchetTreePresence ratchet_tree_presence;
   /* GroupInfo extensions excluding ratchet_tree */
   Extension group_info_extensions<V>;
-  MAC confirmation_tag;
   opaque signature<V>;
 } PartialGroupInfo;
 ~~~
 
-The value of the `ratchet_tree_presence` is defined as follows:
+The value of `ratchet_tree_presence` is defined as follows:
 
 - `no_ratchet_tree`: the `ratchet_tree` extension appears in neither the
   current nor previous epochs.
@@ -205,7 +199,9 @@ This document has no IANA actions.
 
 ## Changes since -00
 
-- Added the confirmation tag to the partial GroupInfo.
+- Removed ratchet tree patch options and notation.
+- Added `ratchet_tree_presence` options for out-of-band, via HTTPS, and
+reconstructed by the delivery service.
 
 # Acknowledgments
 {:numbered="false"}
