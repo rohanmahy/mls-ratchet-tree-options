@@ -4,8 +4,8 @@
 
 MLS                                                              R. Mahy
 Internet-Draft                            Rohan Mahy Consulting Services
-Intended status: Informational                           20 October 2024
-Expires: 23 April 2025
+Intended status: Informational                           3 February 2025
+Expires: 7 August 2025
 
 
       Ways to convey the Ratchet Tree in Messaging Layer Security
@@ -53,11 +53,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 23 April 2025.
+   This Internet-Draft will expire on 7 August 2025.
 
 Copyright Notice
 
-   Copyright (c) 2024 IETF Trust and the persons identified as the
+   Copyright (c) 2025 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -263,16 +263,16 @@ Table of Contents
    [I-D.ietf-mimi-arch]
               Barnes, R., "An Architecture for More Instant Messaging
               Interoperability (MIMI)", Work in Progress, Internet-
-              Draft, draft-ietf-mimi-arch-00, 2 April 2024,
+              Draft, draft-ietf-mimi-arch-01, 21 November 2024,
               <https://datatracker.ietf.org/doc/html/draft-ietf-mimi-
-              arch-00>.
+              arch-01>.
 
    [I-D.mahy-mls-semiprivatemessage]
               Mahy, R., "Semi-Private Messages in the Messaging Layer
               Security (MLS) Protocol", Work in Progress, Internet-
-              Draft, draft-mahy-mls-semiprivatemessage-03, 25 August
+              Draft, draft-mahy-mls-semiprivatemessage-04, 20 October
               2024, <https://datatracker.ietf.org/doc/html/draft-mahy-
-              mls-semiprivatemessage-03>.
+              mls-semiprivatemessage-04>.
 
    [I-D.mahy-mls-xwing]
               Mahy, R., "Messaging Layer Security Ciphersuite using
