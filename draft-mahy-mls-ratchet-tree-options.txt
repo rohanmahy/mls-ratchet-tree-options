@@ -4,8 +4,8 @@
 
 MLS                                                              R. Mahy
 Internet-Draft                            Rohan Mahy Consulting Services
-Intended status: Informational                           3 February 2025
-Expires: 7 August 2025
+Intended status: Informational                           6 February 2025
+Expires: 10 August 2025
 
 
       Ways to convey the Ratchet Tree in Messaging Layer Security
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 7 August 2025.
+   This Internet-Draft will expire on 10 August 2025.
 
 Copyright Notice
 
