@@ -221,11 +221,11 @@ This document registers the `ratchet_tree_source_domains` Extension Type, using 
 
 # Change Log
 
-## Changes since -01
+## Changes between -01 and -02
 
 - Added ratchet_tree_source_domains extension
 
-## Changes since -00
+## Changes between -00 and -01
 
 - Removed ratchet tree patch options and notation.
 - Added `ratchet_tree_presence` options for out-of-band, via HTTPS, and
