@@ -4,8 +4,8 @@
 
 MLS                                                              R. Mahy
 Internet-Draft                            Rohan Mahy Consulting Services
-Intended status: Informational                           6 February 2025
-Expires: 10 August 2025
+Intended status: Informational                             23 April 2025
+Expires: 25 October 2025
 
 
       Ways to convey the Ratchet Tree in Messaging Layer Security
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 August 2025.
+   This Internet-Draft will expire on 25 October 2025.
 
 Copyright Notice
 
@@ -74,14 +74,17 @@ Table of Contents
    1.  Introduction
    2.  Conventions and Definitions
    3.  Conveying the Ratchet Tree
+     3.1.  Conveying the ratchet tree using HTTPS
    4.  Conveying the GroupInfo
    5.  Security Considerations
    6.  IANA Considerations
+     6.1.  ratchet_tree_source_domains MLS Extension Type
    7.  References
      7.1.  Normative References
      7.2.  Informative References
    Appendix A.  Change Log
-     A.1.  Changes since -00
+     A.1.  Changes since -01
+     A.2.  Changes since -00
    Acknowledgments
    Author's Address
 
@@ -163,11 +166,28 @@ Table of Contents
 
    *  distributionService indicates that the ratchet_tree is
       reconstructed by the Distribution Service from the handshake in
-      the group.  This is not possible any handshake messages are sent
-      as an MLS PrivateMessage.
+      the group.  This is not possible if any handshake messages are
+      sent as an MLS PrivateMessage.
 
-   *TODO*: Add GroupContext extension to configure the acceptable
-   domain(s) of the httpsUri.
+3.1.  Conveying the ratchet tree using HTTPS
+
+   This document defines a new MLS GroupContext extension
+   ratchet_tree_source_domains.  When present, it contains a list of at
+   least one domain name.
+
+   struct {
+       opaque domain<V>;
+   } Domain;
+
+   struct {
+       Domain domains<V>
+   } DomainList;
+
+   DomainList ratchet_tree_source_domains;
+
+   When this extension is included in the GroupContext of a group, the
+   URL where the ratchet_tree is fetched MUST come from one of the
+   domains in the ratchet_tree_source_domains.domains list.
 
 4.  Conveying the GroupInfo
 
@@ -238,7 +258,20 @@ Table of Contents
 
 6.  IANA Considerations
 
-   This document has no IANA actions.
+6.1.  ratchet_tree_source_domains MLS Extension Type
+
+   This document registers the ratchet_tree_source_domains Extension
+   Type, using the template below:
+
+   *  Value: TBD1 (new assignment by IANA)
+
+   *  Name: ratchet_tree_source_domains
+
+   *  Messages: GC
+
+   *  Recommended: Y
+
+   *  Reference: RFC XXXX
 
 7.  References
 
@@ -270,9 +303,9 @@ Table of Contents
    [I-D.mahy-mls-semiprivatemessage]
               Mahy, R., "Semi-Private Messages in the Messaging Layer
               Security (MLS) Protocol", Work in Progress, Internet-
-              Draft, draft-mahy-mls-semiprivatemessage-04, 20 October
-              2024, <https://datatracker.ietf.org/doc/html/draft-mahy-
-              mls-semiprivatemessage-04>.
+              Draft, draft-mahy-mls-semiprivatemessage-05, 21 April
+              2025, <https://datatracker.ietf.org/doc/html/draft-mahy-
+              mls-semiprivatemessage-05>.
 
    [I-D.mahy-mls-xwing]
               Mahy, R., "Messaging Layer Security Ciphersuite using
@@ -290,7 +323,11 @@ Table of Contents
 
 Appendix A.  Change Log
 
-A.1.  Changes since -00
+A.1.  Changes since -01
+
+   *  Added ratchet_tree_source_domains extension
+
+A.2.  Changes since -00
 
    *  Removed ratchet tree patch options and notation.
 
