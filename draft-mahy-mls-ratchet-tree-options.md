@@ -118,10 +118,26 @@ URI using the `https:` scheme.
 reconstructed via an unspecified out-of-band application protocol.
 - `distributionService` indicates that the `ratchet_tree` is reconstructed
 by the Distribution Service from the handshake in the group. This is not
-possible any handshake messages are sent as an MLS `PrivateMessage`.
+possible if any handshake messages are sent as an MLS `PrivateMessage`.
 
-**TODO**: Add GroupContext extension to configure the acceptable domain(s)
-of the `httpsUri`.
+## Conveying the ratchet tree using HTTPS
+
+This document defines a new MLS GroupContext extension `ratchet_tree_source_domains`.
+When present, it contains a list of at least one domain name.
+
+~~~ tls
+struct {
+    opaque domain<V>;
+} Domain;
+
+struct {
+    Domain domains<V>
+} DomainList;
+
+DomainList ratchet_tree_source_domains;
+~~~
+
+When this extension is included in the GroupContext of a group, the URL where the `ratchet_tree` is fetched MUST come from one of the domains in the `ratchet_tree_source_domains.domains` list.
 
 
 # Conveying the GroupInfo
@@ -190,12 +206,24 @@ TODO Security
 
 # IANA Considerations
 
-This document has no IANA actions.
+## ratchet_tree_source_domains MLS Extension Type
+
+This document registers the `ratchet_tree_source_domains` Extension Type, using the template below:
+
+- Value: TBD1 (new assignment by IANA)
+- Name: ratchet_tree_source_domains
+- Messages: GC
+- Recommended: Y
+- Reference: RFC XXXX
 
 
 --- back
 
 # Change Log
+
+## Changes since -01
+
+- Added ratchet_tree_source_domains extension
 
 ## Changes since -00
 
