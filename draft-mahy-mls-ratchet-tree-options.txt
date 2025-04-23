@@ -83,8 +83,8 @@ Table of Contents
      7.1.  Normative References
      7.2.  Informative References
    Appendix A.  Change Log
-     A.1.  Changes since -01
-     A.2.  Changes since -00
+     A.1.  Changes between -01 and -02
+     A.2.  Changes between -00 and -01
    Acknowledgments
    Author's Address
 
@@ -323,11 +323,11 @@ Table of Contents
 
 Appendix A.  Change Log
 
-A.1.  Changes since -01
+A.1.  Changes between -01 and -02
 
    *  Added ratchet_tree_source_domains extension
 
-A.2.  Changes since -00
+A.2.  Changes between -00 and -01
 
    *  Removed ratchet tree patch options and notation.
 
