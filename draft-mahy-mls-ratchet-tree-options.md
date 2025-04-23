@@ -4,13 +4,11 @@ abbrev: Ratchet tree options in MLS
 docname: draft-mahy-mls-ratchet-tree-options-latest
 ipr: trust200902
 submissiontype: IETF  # also: "independent", "IAB", or "IRTF"
-area: art
 workgroup: MLS
 area: sec
 category: info
 keyword:
  - ratchet_tree
- - ratchet tree
  - GroupInfo
  - PartialGroupInfo
 
