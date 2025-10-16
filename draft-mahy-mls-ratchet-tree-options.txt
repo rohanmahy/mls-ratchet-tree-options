@@ -4,8 +4,8 @@
 
 MLS                                                              R. Mahy
 Internet-Draft                            Rohan Mahy Consulting Services
-Intended status: Informational                             23 April 2025
-Expires: 25 October 2025
+Intended status: Informational                           16 October 2025
+Expires: 19 April 2026
 
 
       Ways to convey the Ratchet Tree in Messaging Layer Security
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 25 October 2025.
+   This Internet-Draft will expire on 19 April 2026.
 
 Copyright Notice
 
@@ -100,11 +100,11 @@ Table of Contents
    GroupInfo and the ratchet_tree.
 
    Many MLS implementations allow external commits to get the GroupInfo
-   from a central server.  In the MIMI architecture
-   [I-D.ietf-mimi-arch], this server is called the hub, and for brevity
-   we will use that term generically to refer to any central server that
-   provides either GroupInfo or ratchet_tree objects to new members
-   (i.e. welcomed clients or externally joining clients).
+   from a central server.  In the MIMI architecture [RFC9750], this
+   server is called the hub, and for brevity we will use that term
+   generically to refer to any central server that provides either
+   GroupInfo or ratchet_tree objects to new members (i.e. welcomed
+   clients or externally joining clients).
 
    When all handshake messages (commits and proposals) are sent as
    PublicMessages (or SemiPrivateMessages
@@ -199,8 +199,8 @@ Table of Contents
    the GroupInfo scales roughly linearly.  Even using basic credentials,
    this object gets large quickly.  If x509 credentials are used, the
    size increases much more rapidly, and if a post-quantum ciphersuite
-   (for example [I-D.mahy-mls-xwing]) is used, the size will increase
-   even more rapidly with each new member.
+   (for example [I-D.ietf-mls-pq-ciphersuites]) is used, the size will
+   increase even more rapidly with each new member.
 
    In some systems that require unencrypted handshake messages, the hub
    tracks commits as they are sent and constructs changes to the
@@ -293,12 +293,12 @@ Table of Contents
 
 7.2.  Informative References
 
-   [I-D.ietf-mimi-arch]
-              Barnes, R., "An Architecture for More Instant Messaging
-              Interoperability (MIMI)", Work in Progress, Internet-
-              Draft, draft-ietf-mimi-arch-01, 21 November 2024,
-              <https://datatracker.ietf.org/doc/html/draft-ietf-mimi-
-              arch-01>.
+   [I-D.ietf-mls-pq-ciphersuites]
+              Mahy, R. and R. Barnes, "ML-KEM and Hybrid Cipher Suites
+              for Messaging Layer Security", Work in Progress, Internet-
+              Draft, draft-ietf-mls-pq-ciphersuites-00, 25 July 2025,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-mls-pq-
+              ciphersuites-00>.
 
    [I-D.mahy-mls-semiprivatemessage]
               Mahy, R., "Semi-Private Messages in the Messaging Layer
@@ -307,19 +307,17 @@ Table of Contents
               2025, <https://datatracker.ietf.org/doc/html/draft-mahy-
               mls-semiprivatemessage-05>.
 
-   [I-D.mahy-mls-xwing]
-              Mahy, R., "Messaging Layer Security Ciphersuite using
-              XWing Key Exchange Mechanism", Work in Progress, Internet-
-              Draft, draft-mahy-mls-xwing-00, 4 March 2024,
-              <https://datatracker.ietf.org/doc/html/draft-mahy-mls-
-              xwing-00>.
-
    [I-D.robert-mimi-delivery-service]
               Robert, R. and K. Kohbrok, "MIMI Delivery Service", Work
               in Progress, Internet-Draft, draft-robert-mimi-delivery-
               service-06, 6 November 2023,
               <https://datatracker.ietf.org/doc/html/draft-robert-mimi-
               delivery-service-06>.
+
+   [RFC9750]  Beurdouche, B., Rescorla, E., Omara, E., Inguva, S., and
+              A. Duric, "The Messaging Layer Security (MLS)
+              Architecture", RFC 9750, DOI 10.17487/RFC9750, April 2025,
+              <https://www.rfc-editor.org/rfc/rfc9750>.
 
 Appendix A.  Change Log
 
