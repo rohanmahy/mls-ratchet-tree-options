@@ -58,7 +58,7 @@ Likewise, when non-member clients want to join a group, they can do so using
 an external commit. They require the GroupInfo and the `ratchet_tree`.
 
 Many MLS implementations allow external commits to get the GroupInfo from a
-central server. In the MIMI architecture {{?I-D.ietf-mimi-arch}}, this server
+central server. In the MIMI architecture {{?RFC9750}}, this server
 is called the hub, and for brevity we will use that term generically to refer
 to any central server that provides either GroupInfo or `ratchet_tree`
 objects to new members (i.e. welcomed clients or externally joining clients).
@@ -147,8 +147,8 @@ the entire `ratchet_tree` data structure. As group size increases, the size
 of the `ratchet_tree` extension in the GroupInfo scales roughly linearly.
 Even using `basic` credentials, this object gets large quickly. If `x509`
 credentials are used, the size increases much more rapidly, and if a
-post-quantum ciphersuite (for example {{?I-D.mahy-mls-xwing}}) is used, the
-size will increase even more rapidly with each new member.
+post-quantum ciphersuite (for example {{?I-D.ietf-mls-pq-ciphersuites}}) is
+used, the size will increase even more rapidly with each new member.
 
 In some systems that require unencrypted handshake messages, the hub tracks
 commits as they are sent and constructs changes to the `ratchet_tree` as
